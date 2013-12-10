@@ -68,6 +68,7 @@ namespace NoDice
     int                       m_curWins;
     int                       m_multiplier;
     int                       m_score;
+    int                       m_timer;    
     std::vector<std::string>  m_winMessages;
     Matrix4f                  m_unproject;
   };

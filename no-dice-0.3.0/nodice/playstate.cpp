@@ -55,7 +55,9 @@ PlayState(Config& config)
 , m_mouseIsDown(false)
 , m_multiplier(0)
 , m_score(0)
+
 {
+  m_timer = 60;
   // generate unproject matrix
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
@@ -169,10 +171,10 @@ calculateScore(const ObjectBrace& matches)
   {
     int match_score = m_multiplier;
     std::ostringstream ostr;
-    ostr << it->size() << it->at(0)->type();
+    //ostr << it->size() << it->at(0)->type();
     if (m_multiplier)
     {
-      ostr << "+" << m_multiplier;
+    //  ostr << "+" << m_multiplier;
     }
     std::cerr << ostr.str() << "(";
     for (auto obj = it->begin(); obj != it->end(); ++obj)
@@ -305,7 +307,8 @@ draw(Video& video NODICE_UNUSED)
 
   float y = 300.0f;
   std::ostringstream ostr;
-  ostr << std::setw(5) << std::setfill('0') << m_score;
+  ostr << std::setw(5) << std::setfill('0') << m_score << std::endl ;
+  ostr << m_timer ;
   glColor4fv(white.rgba);
   m_scoreFont.print(10.0f, y, 1.0f, ostr.str());
 
