@@ -57,7 +57,7 @@ PlayState(Config& config)
 , m_score(0)
 
 {
-  m_timer = 60;
+  m_timer = 210;
   // generate unproject matrix
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
@@ -134,6 +134,9 @@ pointerMove(int x, int y, int dx, int dy)
 void NoDice::PlayState::
 pointerClick(int x, int y, PointerAction action)
 {
+  if (m_timer == 0){
+     return ;
+  } 
   if (action == pointerUp)
   {
     m_mouseIsDown = false;
@@ -196,10 +199,15 @@ void NoDice::PlayState::
 update(App& app NODICE_UNUSED)
 {
   m_gameboard.update();
+  if(m_timer == 0){
+    
+     return ;
+  }
   switch (m_state)
   {
     case state_swapping:
     {
+      m_timer--;
       if (!m_gameboard.isSwapping())
       {
         ObjectBrace matches(m_gameboard.findWins());
@@ -219,6 +227,7 @@ update(App& app NODICE_UNUSED)
 
     case state_unswapping:
     {
+      m_timer--;
       if (!m_gameboard.isSwapping())
       {
         m_state = state_idle; // temp. for now
@@ -307,13 +316,21 @@ draw(Video& video NODICE_UNUSED)
 
   float y = 300.0f;
   std::ostringstream ostr;
-  ostr << std::setw(5) << std::setfill('0') << m_score << std::endl ;
-  ostr << m_timer ;
+  std::ostringstream ostr2;
+  ostr << std::setw(5) << std::setfill('0') << m_score ;
+  ostr2 << m_timer/21 ;
   glColor4fv(white.rgba);
   m_scoreFont.print(10.0f, y, 1.0f, ostr.str());
+  m_scoreFont.print(10.0f, 250.0f, 1.0f, ostr2.str());
+  if(m_timer == 0){
 
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  m_scoreFont.print(300.0f,300.0f, 1.0f, ostr.str());
+  }
   for (auto it = m_winMessages.begin(); it != m_winMessages.end(); ++it)
   {
+
+  glDisable(GL_DEPTH_TEST);
     y -= 30;
     m_scoreFont.print(10.0f, y, 0.8f, *it);
   }
